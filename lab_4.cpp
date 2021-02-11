@@ -143,15 +143,20 @@ void lab4()
 
         // Todo 7: Transform the reference image according to the similarity S, and insert into the mosaic.
         cv::Mat mosaic;
+        cv::warpPerspective(ref_image, mosaic, S_cv, ref_image.size()); 
 
         // Todo 8: Transform the current frame according to S and the computed homography.
         cv::Mat frame_warp;
+        cv::warpPerspective(frame, frame_warp, S_cv * H_cv, frame.size()); 
 
         // Todo 9: Compute a mask for the transformed current frame.
         cv::Mat mask = cv::Mat::ones(frame.size(), CV_8UC1);
         cv::Mat mask_warp;
+        cv::warpPerspective(mask, mask_warp, S_cv * H_cv, mask.size()); 
+        cv::erode(mask_warp, mask_warp, cv::Mat()); 
 
         //Todo 10: Insert the current frame into the mosaic.
+        frame_warp.copyTo(mosaic, mask_warp); 
 
         // Draw estimation duration.
         drawEstimationDetails(vis_img, estimation_duration, estimate.num_inliers);
@@ -183,7 +188,7 @@ void lab4()
       ref_keypoints.clear();
       ref_descriptors = cv::Mat{};
     }
-    else if (key > 0) break;
+    else if (key == 'q') break;
   }
 }
 

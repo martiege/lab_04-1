@@ -1,9 +1,16 @@
 #include "feature_utils.h"
-
+#include <iostream> 
+ 
 std::vector<cv::DMatch> extractGoodRatioMatches(const std::vector<std::vector<cv::DMatch>>& matches, float max_ratio)
 {
   // Todo 2: Implement the ratio test.
   std::vector<cv::DMatch> good_ratio_matches;
+  good_ratio_matches.reserve(0.8 * matches.size());
+  for (std::vector<cv::DMatch> match : matches)
+  {
+    if (match[0].distance / match[1].distance > max_ratio)
+      good_ratio_matches.push_back(match[0]); 
+  }
 
   return good_ratio_matches;
 }
